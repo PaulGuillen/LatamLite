@@ -8,7 +8,10 @@ interface Shipment {
   telefono: string;
   origen?: string;
   destino?: string;
+  status: ShipmentStatus;
 }
+
+type ShipmentStatus = "PENDIENTE" | "ENVIADO";
 
 export const ShipmentsPage = () => {
   const [showExcelModal, setShowExcelModal] = useState(false);
@@ -18,6 +21,8 @@ export const ShipmentsPage = () => {
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [printFormat, setPrintFormat] = useState<"1col" | "2col" | null>(null);
+  const [showStatusModal, setShowStatusModal] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   /* ============================
       DESCARGAR FORMATO
@@ -76,6 +81,7 @@ export const ShipmentsPage = () => {
         telefono: row["CELULAR DESTINATARIO"],
         origen: row["ORIGEN"],
         destino: row["DESTINO"],
+        status: "PENDIENTE", // 🔥 agregado aquí
       }));
 
       setShipments(normalized);
@@ -109,6 +115,23 @@ export const ShipmentsPage = () => {
     }
   };
 
+  const handleStatusClick = () => {
+    if (selectedRows.length === 0) {
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 2500);
+    } else {
+      setShowStatusModal(true);
+    }
+  };
+
+  const updateStatus = (newStatus: "PENDIENTE" | "ENVIADO") => {
+    const updated: Shipment[] = shipments.map((item, index) =>
+      selectedRows.includes(index) ? { ...item, status: newStatus } : item,
+    );
+
+    setShipments(updated);
+  };
+
   /* ============================
       IMPRESIÓN REAL
   ============================ */
@@ -130,7 +153,7 @@ export const ShipmentsPage = () => {
     if (!printWindow) return;
 
     // 🔥 EXACTAMENTE 5 POR HOJA
-    const perPage = 5;
+    const perPage = printFormat === "1col" ? 5 : 10;
 
     const pages = [];
     for (let i = 0; i < selectedShipments.length; i += perPage) {
@@ -271,6 +294,35 @@ export const ShipmentsPage = () => {
 
   return (
     <div className="shipments-wrapper">
+      {showToast && (
+        <div className="toast-success">✓ Selecciona al menos un envío</div>
+      )}
+
+      {showStatusModal && (
+        <div
+          className="export-overlay"
+          onClick={() => setShowStatusModal(false)}
+        >
+          <div className="status-modal" onClick={(e) => e.stopPropagation()}>
+            <h2>Actualizar Estado</h2>
+            <p>Se aplicará a {selectedRows.length} elemento(s).</p>
+
+            <button
+              className="btn-enviado"
+              onClick={() => updateStatus("ENVIADO")}
+            >
+              🚚 MARCAR COMO ENVIADO
+            </button>
+
+            <button
+              className="btn-pendiente"
+              onClick={() => updateStatus("PENDIENTE")}
+            >
+              ⏳ MARCAR COMO PENDIENTE
+            </button>
+          </div>
+        </div>
+      )}
       <div className="shipments-top">
         <div className="top-row">
           <button className="filter-btn">PENDIENTES ▾</button>
@@ -301,7 +353,9 @@ export const ShipmentsPage = () => {
             📊 Excel
           </button>
 
-          <button className="action-btn primary">＋ Estado</button>
+          <button className="action-btn primary" onClick={handleStatusClick}>
+            ＋ Estado
+          </button>
           <button className="action-btn danger">🗑</button>
         </div>
       </div>
@@ -313,13 +367,29 @@ export const ShipmentsPage = () => {
         </div>
 
         {shipments.map((item, index) => (
-          <div key={index} className="shipment-card">
+          <div
+            key={index}
+            className={`shipment-card ${
+              item.status === "ENVIADO" ? "sent-card" : ""
+            }`}
+          >
             <div className="shipment-left">
               <div className="shipment-checkbox">
                 <input
                   type="checkbox"
-                  checked={selectedRows.includes(index)}
-                  onChange={() => handleSelectRow(index)}
+                  checked={
+                    item.status === "ENVIADO" || selectedRows.includes(index)
+                  }
+                  onChange={() => {
+                    const newStatus: ShipmentStatus =
+                      item.status === "ENVIADO" ? "PENDIENTE" : "ENVIADO";
+
+                    const updated: Shipment[] = shipments.map((s, i) =>
+                      i === index ? { ...s, status: newStatus } : s,
+                    );
+
+                    setShipments(updated);
+                  }}
                 />
               </div>
 
@@ -337,7 +407,13 @@ export const ShipmentsPage = () => {
             </div>
 
             <div className="shipment-right">
-              <div className="status pending">PENDIENTE</div>
+              <div
+                className={`status ${
+                  item.status === "ENVIADO" ? "sent" : "pending"
+                }`}
+              >
+                {item.status || "PENDIENTE"}
+              </div>
               <div className="whatsapp">🟢</div>
             </div>
           </div>

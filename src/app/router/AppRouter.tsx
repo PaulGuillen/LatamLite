@@ -4,6 +4,8 @@ import { RegisterPage } from "../../features/auth/pages/RegisterPage";
 import { DashboardLayout } from "../../features/dashboard/components/DashboardLayout";
 import { SettingsPage } from "../../features/dashboard/pages/SettingsPage";
 import { ShipmentsPage } from "../../features/dashboard/pages/ShipmentsPage";
+import { ProtectedRoute } from "./ProtectedRoute";
+import { ShipmentPage } from "../../features/shipments/pages/ShipmentPage";
 
 export const AppRouter = () => {
   return (
@@ -11,11 +13,29 @@ export const AppRouter = () => {
       <Route path="/" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
 
-      <Route path="/dashboard" element={<DashboardLayout />}>
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<Navigate to="settings" replace />} />
         <Route path="settings" element={<SettingsPage />} />
-        <Route path="shipments" element={<ShipmentsPage />} />
+        <Route path="shipments" element={<ShipmentPage />} />
       </Route>
+
+      <Route
+        path="/"
+        element={
+          localStorage.getItem("auth") === "true" ? (
+            <Navigate to="/dashboard" replace />
+          ) : (
+            <LoginPage />
+          )
+        }
+      />
     </Routes>
   );
 };

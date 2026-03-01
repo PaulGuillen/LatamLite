@@ -14,12 +14,11 @@ export const LoginPage = () => {
     try {
       const cleanEmail = email.trim();
 
-      console.log("EMAIL:", cleanEmail);
-      console.log("PASSWORD:", password);
-
       await loginUser(cleanEmail, password);
 
-      navigate("/dashboard");
+      localStorage.setItem("auth", "true"); // ✅ importante
+
+      navigate("/dashboard", { replace: true });
     } catch (error: any) {
       console.error(error);
       alert(error.code);
