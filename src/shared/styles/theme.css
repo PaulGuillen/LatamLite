@@ -1,0 +1,26 @@
+/* Variables Día */
+body.light {
+  --bg: #f4f6f9;
+  --card: #ffffff;
+  --text: #1f2937;
+  --primary: #3b82f6;
+  --secondary: #10b981;
+  --border: #e5e7eb;
+}
+
+/* Variables Noche */
+body.dark {
+  --bg: #0f172a;
+  --card: #1e293b;
+  --text: #f8fafc;
+  --primary: #60a5fa;
+  --secondary: #34d399;
+  --border: #334155;
+}
+
+/* Transiciones suaves */
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}

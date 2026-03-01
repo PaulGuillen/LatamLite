@@ -1,0 +1,19 @@
+.auth-card {
+  background: var(--card);
+  padding: 40px;
+  width: 380px;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+.auth-card h2 {
+  margin-bottom: 24px;
+  font-size: 22px;
+}
+
+.auth-card label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  display: block;
+}
