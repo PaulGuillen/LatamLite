@@ -3,10 +3,12 @@ import { ThemeToggle } from "../../../shared/components/ThemeToggle";
 import "./LoginPage.css";
 import { useState } from "react";
 import { loginUser } from "../services/authService";
+import { useNavigate } from "react-router-dom";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
@@ -17,7 +19,7 @@ export const LoginPage = () => {
 
       await loginUser(cleanEmail, password);
 
-      window.location.href = "/dashboard";
+      navigate("/dashboard");
     } catch (error: any) {
       console.error(error);
       alert(error.code);
