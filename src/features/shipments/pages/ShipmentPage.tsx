@@ -1,4 +1,3 @@
-import { ShipmentCard } from "../components/ShipmentCard";
 import { ShipmentsTopBar } from "../components/ShipmentsTopBar";
 import { StatusModal } from "../components/StatusModal";
 import { ExcelModal } from "../components/ExcelModal";

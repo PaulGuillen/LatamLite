@@ -107,14 +107,6 @@ export const ShipmentsPage = () => {
     setSelectAll(!selectAll);
   };
 
-  const handleSelectRow = (index: number) => {
-    if (selectedRows.includes(index)) {
-      setSelectedRows(selectedRows.filter((i) => i !== index));
-    } else {
-      setSelectedRows([...selectedRows, index]);
-    }
-  };
-
   const handleStatusClick = () => {
     if (selectedRows.length === 0) {
       setShowToast(true);

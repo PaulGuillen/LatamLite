@@ -3,7 +3,6 @@ import { LoginPage } from "../../features/auth/pages/LoginPage";
 import { RegisterPage } from "../../features/auth/pages/RegisterPage";
 import { DashboardLayout } from "../../features/dashboard/components/DashboardLayout";
 import { SettingsPage } from "../../features/dashboard/pages/SettingsPage";
-import { ShipmentsPage } from "../../features/dashboard/pages/ShipmentsPage";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { ShipmentPage } from "../../features/shipments/pages/ShipmentPage";
 
