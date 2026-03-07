@@ -9,7 +9,7 @@ import { ShipmentPage } from "../../features/shipments/pages/ShipmentPage";
 export const AppRouter = () => {
   return (
     <Routes>
-      <Route path="/" element={<LoginPage />} />
+
       <Route path="/register" element={<RegisterPage />} />
 
       <Route
